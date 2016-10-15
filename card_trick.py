@@ -1,14 +1,24 @@
-"""Simulates the popular 'Twenty One' card trick"""
+"""Simulates the popular 'Twenty One' card trick.
+
+1.	21 cards selected from the deck.
+2.	Cards are dealt into 3 columns of 7.
+3.	Participant selects a card.
+4.	Participent points to the pile which contains their card.
+5.	Cards are picked up with the selected pile sandwiched between the others.
+6.	Steps 2-5 are repeated 2 times more.
+7.	The chosen card is now the 11th card in the deck.
+"""
 
 # pylint: disable=C0103, C0325
 
 from random import shuffle
 
 def make_deck():
-    """Create and shuffle deck of cards.
+    """Create and shuffles a deck of cards.
 
-    Creates a deck of cards with the notation [Value, Suit]
-    E.g. 7S for seven of spades, then shufles and returns the deck.
+    Returns
+    ----------
+    new_deck: A list containing a randomly shuffled deck of 52 cards.
     """
     new_deck = []
 
@@ -23,7 +33,17 @@ def make_deck():
     return new_deck
 
 def deal_cards_into_3_columns(card_pile):
-    """Deals cards into 3 columns"""
+    """Deals cards row by row into 3 columns of 7 cards.
+
+    Parameters
+    ----------
+    card_pile: A list containing 21 cards.
+
+    Returns
+    ----------
+    [column_1, column_2, column_3]: A 2d list containing the 3 columns of
+                                    7 cards.
+    """
     column_1, column_2, column_3 = [], [], []
     column_count = 1
 
@@ -44,27 +64,60 @@ def deal_cards_into_3_columns(card_pile):
 
 
 def print_card_pile(pile_number, card_pile):
-    """Prints card pile"""
+    """Prints a formatted card pile.
 
+    The card pile is formatted with the pile number, followed by each card
+    seperated with ', '.
+
+    Parameters
+    ----------
+    pile_number: An int literal containing the pile number to print.
+    card_pile: A list containing the cards to format and print.
+    """
     print("Pile " + str(pile_number) + ": " + ", ".join(card_pile))
 
 
-def print_three_card_piles(card_pile):
-    """Prints 3 card piles for player to choose from"""
-    print_card_pile(1, card_pile[0])
-    print_card_pile(2, card_pile[1])
-    print_card_pile(3, card_pile[2])
+def print_three_card_piles(card_piles):
+    """Prints 3 card piles.
+
+    This function uses print_card_pile to print 3 card piles for the given
+    parameter.
+
+    Parameters
+    ----------
+    card_piles: A 2d list containing 3 piles to be printed.
+
+    """
+    print_card_pile(1, card_piles[0])
+    print_card_pile(2, card_piles[1])
+    print_card_pile(3, card_piles[2])
 
 
 def ask_player_for_chosen_card_pile():
-    """ Asks player for chosen card pile, validates it and returns it as an int"""
+    """ Asks player for chosen card pile, validates it and returns it as an int.
+
+    Returns
+    ----------
+    chosen_card_pile: The pile number of the users card as an integer.
+    """
     chosen_card_pile = int(input("Which number pile is your card in?"))
     # ADD VALIDATION HERE
     return chosen_card_pile
 
 
 def pick_up_card_piles(chosen_card_pile, card_piles):
-    """Picks up cards based on which pile chosen card is in"""
+    """Picks up cards based on which pile chosen card is in.
+
+    Parameters
+    ----------
+    chosen_card_pile: The card pile which contains the users card
+    card_piles: The list of all 3 card piles.
+
+    Returns
+    ----------
+    concentrated_card_pile: A list that joins the 3 card piles, with the pile
+                            that contains the users card in the middle.
+    """
     if chosen_card_pile == 1:
         card_piles[0], card_piles[1] = card_piles[1], card_piles[0]
 
@@ -72,7 +125,6 @@ def pick_up_card_piles(chosen_card_pile, card_piles):
         card_piles[2], card_piles[1] = card_piles[1], card_piles[2]
 
     concentrated_card_pile = card_piles[0] + card_piles[1] + card_piles[2]
-
 
     return concentrated_card_pile
 
@@ -83,7 +135,7 @@ deck = make_deck()
 
 # TURN 1
 
-deck_fragment = deal_cards_into_3_columns(deck[0:20])
+deck_fragment = deal_cards_into_3_columns(deck[0:21])
 
 print_three_card_piles(deck_fragment)
 
@@ -113,6 +165,77 @@ print_three_card_piles(deck_fragment)
 
 deck_fragment = pick_up_card_piles(pile_of_chosen_card, deck_fragment)
 
-# Tell user their card
-
+# Extra Credit
+print()
 print(deck_fragment[10])
+print()
+
+users_card = deck_fragment[10]
+
+card_piles = [deck_fragment[0:4], deck_fragment[4:8], deck_fragment[8:12], deck_fragment[12:16], deck_fragment[16:21]]
+
+for index, pile in enumerate(card_piles):
+    print_card_pile(index+1, pile)
+
+chosen_piles = input("Please select 2 piles at random. (Seperate pile numbers with a space) ")
+
+chosen_piles = chosen_piles.split()
+
+chosen_piles[0], chosen_piles[1] = int(chosen_piles[0])-1, int(chosen_piles[1])-1
+
+new_card_piles = []
+
+if 2 in chosen_piles:
+    print("All other piles will be removed.")
+
+    for index, pile in enumerate(card_piles):
+        if index in chosen_piles:
+            new_card_piles.append(pile)
+
+else:
+    print("These piles will be removed")
+
+    for index, pile in enumerate(card_piles):
+        if index not in chosen_piles:
+            new_card_piles.append(pile)
+
+card_piles = new_card_piles
+
+for index, pile in enumerate(card_piles):
+    print_card_pile(index+1, pile)
+
+users_card_pile = None
+
+for index, pile in enumerate(card_piles):
+    for card in pile:
+        if card == users_card:
+            users_card_pile = index
+            break
+
+if len(card_piles) > 2:
+    chosen_piles = input("Please select 2 more piles. (Seperate pile numbers with a space) ")
+
+    chosen_piles = chosen_piles.split()
+
+    chosen_piles[0], chosen_piles[1] = int(chosen_piles[0])-1, int(chosen_piles[1])-1
+
+    new_card_piles = []
+
+    if users_card_pile in chosen_piles:
+        print("All other piles will be removed.")
+
+        for index, pile in enumerate(card_piles):
+            if index in chosen_piles:
+                new_card_piles.append(pile)
+
+    else:
+        print("These piles will be removed")
+
+        for index, pile in enumerate(card_piles):
+            if index not in chosen_piles:
+                new_card_piles.append(pile)
+
+    card_piles = new_card_piles
+
+print()
+print(card_piles)
