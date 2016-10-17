@@ -13,6 +13,7 @@
 
 from random import shuffle
 
+
 def make_deck():
     """Create and shuffles a deck of cards.
 
@@ -31,6 +32,7 @@ def make_deck():
     shuffle(new_deck)
 
     return new_deck
+
 
 def deal_cards_into_3_columns(card_pile):
     """Deals cards row by row into 3 columns of 7 cards.
@@ -117,9 +119,6 @@ def ask_player_for_chosen_card_pile():
             print("Only enter the number of the pile.")
 
         print()
-
-
-
 
 
 def pick_up_card_piles(chosen_card_pile, card_piles):
@@ -210,7 +209,7 @@ def ask_player_for_1_pile(number_of_piles):
         # If input is a number
         if chosen_card_pile.isdigit():
 
-            chosen_card_pile = int(chosen_card_pile)
+            chosen_card_pile = int(chosen_card_pile) - 1
 
             # if input more than 0 but not more than number of piles.
             if 0 <= chosen_card_pile <= number_of_piles:
@@ -253,7 +252,7 @@ def ask_player_for_2_piles(number_of_piles):
 
             # if input more than 0 but not more than number of piles.
             if ((0 <= chosen_card_piles[0] <= number_of_piles) and
-                (0 <= chosen_card_piles[1] <= number_of_piles)):
+                    (0 <= chosen_card_piles[1] <= number_of_piles)):
 
                 return chosen_card_piles
 
@@ -263,8 +262,8 @@ def ask_player_for_2_piles(number_of_piles):
 
         # If input is not [int][space][int]
         else:
-            print("Please format your input with your 2 chosen " \
-                   "pile numbers seperated by a space")
+            print("Please format your input with your 2 chosen "
+                  "pile numbers seperated by a space")
 
         print()
 
@@ -288,9 +287,11 @@ def remove_piles(users_card_pile, chosen_piles, card_piles):
     ----------
     """
 
+    print()
+
     new_card_piles = []
 
-    if type(chosen_piles) == list:
+    if isinstance(chosen_piles, list):
 
         if users_card_pile in chosen_piles:
             print("The other piles will be removed.")
@@ -308,11 +309,6 @@ def remove_piles(users_card_pile, chosen_piles, card_piles):
 
     else:
 
-        print()
-        print("Before ")
-        print(card_piles)
-        print()
-
         if chosen_piles == users_card_pile:
             print("The other pile will be removed.")
             if chosen_pile == 0:
@@ -320,22 +316,147 @@ def remove_piles(users_card_pile, chosen_piles, card_piles):
             else:
                 card_piles.remove(card_piles[0])
 
-            print()
-            print(card_piles)
-            print()
-
         else:
             print("This pile will be removed.")
             card_piles.remove(card_piles[chosen_pile])
 
-            print()
-            print(card_piles)
-            print()
-
-        card_piles = new_card_piles
+        new_card_piles = card_piles
 
     return new_card_piles
 
+
+def print_multiple_cards(card_pile):
+    """Prints formatted cards followed by a blank line"""
+    for index, card in enumerate(card_pile):
+        print("Card " + str(index+1) + ": " + card)
+    print()
+
+
+def find_users_card(users_card, card_pile):
+    """Finds the index of the users card"""
+
+    for index, card in enumerate(card_pile):
+        if card == users_card:
+            return index
+
+
+def ask_player_for_1_card(number_of_cards):
+    """Asks player for 1 card pile, validates the input and returns it """
+
+    # Convert number of piles to index number
+    number_of_cards = int(number_of_cards) - 1
+
+    while True:
+        chosen_card = input("Please select a card at random. ")
+
+        # If input is a number
+        if chosen_card.isdigit():
+
+            chosen_card = int(chosen_card)
+
+            # if input more than 0 but not more than number of piles.
+            if 0 <= chosen_card <= number_of_cards + 1:
+
+                return chosen_card
+
+            # If number's not valid
+            else:
+                print("Please check the card number you have entered.")
+
+        # If input is not a number
+        else:
+            print("Only enter the number of the card.")
+
+        print()
+
+
+def ask_player_for_2_cards(number_of_cards):
+    """Asks player for 2 card piles, validates the input and returns it """
+
+    # Convert number of piles to index number
+    number_of_cards = int(number_of_cards) - 1
+
+    while True:
+        chosen_cards = input("Please select 2 cards at random. "
+                             "(Seperate card numbers with a space) ")
+
+        # If input is 3 chars long and follows pattern [int][space][int].
+        if (len(chosen_cards) == 3 and
+                chosen_cards[0].isdigit() and
+                chosen_cards[1] == " " and
+                chosen_cards[2].isdigit()):
+
+            # Split user input into list of 2 numbers
+            chosen_cards = chosen_cards.split()
+
+            # Change user input from pile numbers to pile index's
+            chosen_cards[0] = int(chosen_cards[0])-1
+            chosen_cards[1] = int(chosen_cards[1])-1
+
+            # if input more than 0 but not more than number of piles.
+            if ((0 <= chosen_cards[0] <= number_of_cards) and
+                    (0 <= chosen_cards[1] <= number_of_cards)):
+
+                return chosen_cards
+
+            # If numbers not valid
+            else:
+                print("Please check the card numbers you have entered.")
+
+        # If input is not [int][space][int]
+        else:
+            print("Please format your input with your 2 chosen "
+                  "card numbers seperated by a space")
+
+        print()
+
+
+def remove_cards(users_card, chosen_cards, card_pile):
+    """Removes chosen piles or all other piles depedning on user input
+
+    The piles chosen by the user are removed unless the user chooses a pile
+    with their own card where all other piles are removed.
+
+    Parameters
+    ----------
+    """
+
+    print()
+
+    new_card_pile = []
+
+    if isinstance(chosen_cards, list):
+
+        if users_card in chosen_cards:
+            print("The other cards will be removed.")
+
+            for index, card in enumerate(card_pile):
+                if index in chosen_cards:
+                    new_card_pile.append(card)
+
+        else:
+            print("These cards will be removed")
+
+            for index, card in enumerate(card_pile):
+                if index not in chosen_cards:
+                    new_card_pile.append(card)
+
+    else:
+
+        if chosen_cards == users_card:
+            print("The other card will be removed.")
+            if chosen_cards == 0:
+                card_pile.remove(card_pile[1])
+            else:
+                card_pile.remove(card_pile[0])
+
+        else:
+            print("This card will be removed.")
+            card_pile.remove(card_pile[chosen_cards])
+
+        new_card_pile = card_pile
+
+    return new_card_pile
 
 # Start of main code
 
@@ -380,5 +501,31 @@ if len(card_piles) is not 1:
 print()
 print(card_piles)
 print()
+
+card_pile = card_piles[0]
+
+print("Only one pile remaining. Now I will find your card. ")
+
+while len(card_pile) > 2:
+
+    print_multiple_cards(card_pile)
+
+    users_card = find_users_card(users_card, card_pile)
+
+    chosen_card = ask_player_for_2_cards(len(card_pile))
+
+    card_pile = remove_cards(users_card, chosen_card, card_pile)
+
+# If there are 2 piles left
+if len(card_pile) is not 1:
+
+    print_multiple_cards(card_pile)
+
+    users_card = find_users_card(users_card, card_pile)
+
+    chosen_card = ask_player_for_1_card(2)
+
+    card_pile = remove_cards(users_card, chosen_card, card_pile)
+
 
 # TODO Refactor extra credit code and add code to find card after sorted into 1 pile
