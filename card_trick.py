@@ -352,10 +352,10 @@ def ask_player_for_1_card(number_of_cards):
         # If input is a number
         if chosen_card.isdigit():
 
-            chosen_card = int(chosen_card)
+            chosen_card = int(chosen_card) - 1
 
             # if input more than 0 but not more than number of piles.
-            if 0 <= chosen_card <= number_of_cards + 1:
+            if 0 <= chosen_card <= number_of_cards:
 
                 return chosen_card
 
@@ -460,11 +460,6 @@ def remove_cards(users_card, chosen_cards, card_pile):
 
 # Start of main code
 
-# Print users card
-print()
-print(deck_fragment[10])
-print()
-
 users_card = deck_fragment[10]
 
 card_piles = [deck_fragment[0:4], deck_fragment[4:8], deck_fragment[8:12],
@@ -481,26 +476,22 @@ while len(card_piles) > 2:
 
     print_multiple_card_piles(card_piles)
 
-    users_card_pile = find_users_card_pile(users_card, card_piles)
+    users_card_index = find_users_card_pile(users_card, card_piles)
 
     chosen_piles = ask_player_for_2_piles(len(card_piles))
 
-    card_piles = remove_piles(users_card_pile, chosen_piles, card_piles)
+    card_piles = remove_piles(users_card_index, chosen_piles, card_piles)
 
 # If there are 2 piles left
 if len(card_piles) is not 1:
 
     print_multiple_card_piles(card_piles)
 
-    users_card_pile = find_users_card_pile(users_card, card_piles)
+    users_card_index = find_users_card_pile(users_card, card_piles)
 
     chosen_pile = ask_player_for_1_pile(2)
 
-    card_piles = remove_piles(users_card_pile, chosen_pile, card_piles)
-
-print()
-print(card_piles)
-print()
+    card_piles = remove_piles(users_card_index, chosen_pile, card_piles)
 
 card_pile = card_piles[0]
 
@@ -510,22 +501,25 @@ while len(card_pile) > 2:
 
     print_multiple_cards(card_pile)
 
-    users_card = find_users_card(users_card, card_pile)
+    users_card_index = find_users_card(users_card, card_pile)
 
     chosen_card = ask_player_for_2_cards(len(card_pile))
 
-    card_pile = remove_cards(users_card, chosen_card, card_pile)
+    card_pile = remove_cards(users_card_index, chosen_card, card_pile)
 
 # If there are 2 piles left
 if len(card_pile) is not 1:
 
     print_multiple_cards(card_pile)
 
-    users_card = find_users_card(users_card, card_pile)
+    users_card_index = find_users_card(users_card, card_pile)
 
     chosen_card = ask_player_for_1_card(2)
 
-    card_pile = remove_cards(users_card, chosen_card, card_pile)
+    card_pile = remove_cards(users_card_index, chosen_card, card_pile)
+
+print()
+print("The final card left is", card_pile[0], "your card.")
 
 
-# TODO Refactor extra credit code and add code to find card after sorted into 1 pile
+# TODO Fix code to find card after sorted into 1 pile
