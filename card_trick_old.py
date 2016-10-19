@@ -189,23 +189,19 @@ deck_fragment = pick_up_card_piles(pile_of_chosen_card, deck_fragment)
 
 # Extra Credit
 
-def print_card_pile_face_down(pile_number, card_pile):
-    if len(card_pile) > 1:
-        face_down_cards = "???, "*(len(card_pile) - 1) + "???"
-        print("Pile " + str(pile_number) + ": " + face_down_cards)
-    else:
-        print("Pile " + str(pile_number))
 
-
-def print_multiple_card_piles_face_down(card_piles):
+def print_multiple_card_piles(card_piles):
     """Prints formatted card piles followed by a blank line"""
     for index, pile in enumerate(card_piles):
-        print_card_pile_face_down(index+1, pile)
+        print_card_pile(index+1, pile)
     print()
 
 
-def ask_player_for_1_pile():
+def ask_player_for_1_pile(number_of_piles):
     """Asks player for 1 card pile, validates the input and returns it """
+
+    # Convert number of piles to index number
+    number_of_piles = int(number_of_piles) - 1
 
     while True:
         chosen_card_pile = input("Please select a pile at random. ")
@@ -216,15 +212,9 @@ def ask_player_for_1_pile():
             chosen_card_pile = int(chosen_card_pile) - 1
 
             # if input more than 0 but not more than number of piles.
-            if 0 <= chosen_card_pile <= 4:
+            if 0 <= chosen_card_pile <= number_of_piles:
 
-                # If card pile not empty
-                if len(chosen_card_pile) < 1:
-
-                    return chosen_card_pile
-
-                else:
-                    print("The pile number you have entered has already been entered")
+                return chosen_card_pile
 
             # If number's not valid
             else:
@@ -237,8 +227,11 @@ def ask_player_for_1_pile():
         print()
 
 
-def ask_player_for_2_piles():
+def ask_player_for_2_piles(number_of_piles):
     """Asks player for 2 card piles, validates the input and returns it """
+
+    # Convert number of piles to index number
+    number_of_piles = int(number_of_piles) - 1
 
     while True:
         chosen_card_piles = input("Please select 2 piles at random. "
@@ -258,15 +251,10 @@ def ask_player_for_2_piles():
             chosen_card_piles[1] = int(chosen_card_piles[1])-1
 
             # if input more than 0 but not more than number of piles.
-            if ((0 <= chosen_card_piles[0] <= 4) and
-                    (0 <= chosen_card_piles[1] <= 4)):
+            if ((0 <= chosen_card_piles[0] <= number_of_piles) and
+                    (0 <= chosen_card_piles[1] <= number_of_piles)):
 
-                # If pile not empty (already removed)
-                if len(chosen_card_piles[0]) and len(chosen_card_piles[1]) > 1:
-                    return chosen_card_piles
-
-                else:
-                    print("The pile number you have entered has already been entered")
+                return chosen_card_piles
 
             # If numbers not valid
             else:
@@ -311,8 +299,6 @@ def remove_piles(users_card_pile, chosen_piles, card_piles):
             for index, pile in enumerate(card_piles):
                 if index in chosen_piles:
                     new_card_piles.append(pile)
-                else:
-                    new_card_piles.append([""])
 
         else:
             print("These piles will be removed")
@@ -320,21 +306,19 @@ def remove_piles(users_card_pile, chosen_piles, card_piles):
             for index, pile in enumerate(card_piles):
                 if index not in chosen_piles:
                     new_card_piles.append(pile)
-                else:
-                    new_card_piles.append([""])
 
     else:
 
         if chosen_piles == users_card_pile:
             print("The other pile will be removed.")
             if chosen_pile == 0:
-                card_piles[1] = [""]
+                card_piles.remove(card_piles[1])
             else:
-                card_piles[0] = [""]
+                card_piles.remove(card_piles[0])
 
         else:
             print("This pile will be removed.")
-            card_piles[chosen_pile] = [""]
+            card_piles.remove(card_piles[chosen_pile])
 
         new_card_piles = card_piles
 
@@ -450,9 +434,6 @@ def remove_cards(users_card, chosen_cards, card_pile):
                 if index in chosen_cards:
                     new_card_pile.append(card)
 
-                else:
-                    new_card_pile.append("")
-
         else:
             print("These cards will be removed")
 
@@ -484,31 +465,31 @@ users_card = deck_fragment[10]
 card_piles = [deck_fragment[0:4], deck_fragment[4:8], deck_fragment[8:12],
               deck_fragment[12:16], deck_fragment[16:21]]
 
-print_multiple_card_piles_face_down(card_piles)
+print_multiple_card_piles(card_piles)
 
-chosen_piles = ask_player_for_2_piles()
+chosen_piles = ask_player_for_2_piles(5)
 
 card_piles = remove_piles(2, chosen_piles, card_piles)
 
 # While there are more then 2 piles
 while len(card_piles) > 2:
 
-    print_multiple_card_piles_face_down(card_piles)
+    print_multiple_card_piles(card_piles)
 
     users_card_index = find_users_card_pile(users_card, card_piles)
 
-    chosen_piles = ask_player_for_2_piles()
+    chosen_piles = ask_player_for_2_piles(len(card_piles))
 
     card_piles = remove_piles(users_card_index, chosen_piles, card_piles)
 
 # If there are 2 piles left
 if len(card_piles) is not 1:
 
-    print_multiple_card_piles_face_down(card_piles)
+    print_multiple_card_piles(card_piles)
 
     users_card_index = find_users_card_pile(users_card, card_piles)
 
-    chosen_pile = ask_player_for_1_pile()
+    chosen_pile = ask_player_for_1_pile(2)
 
     card_piles = remove_piles(users_card_index, chosen_pile, card_piles)
 
@@ -518,7 +499,7 @@ print("Only one pile remaining. Now I will find your card. ")
 
 while len(card_pile) > 2:
 
-    print_multiple_card_piles_face_down(card_piles)
+    print_multiple_cards(card_pile)
 
     users_card_index = find_users_card(users_card, card_pile)
 
@@ -529,7 +510,7 @@ while len(card_pile) > 2:
 # If there are 2 piles left
 if len(card_pile) is not 1:
 
-    print_multiple_card_piles_face_down(card_piles)
+    print_multiple_cards(card_pile)
 
     users_card_index = find_users_card(users_card, card_pile)
 
