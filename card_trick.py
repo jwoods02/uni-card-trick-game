@@ -18,7 +18,7 @@ def make_deck():
     """Create and shuffles a deck of cards.
 
     Returns
-    ----------
+    -------
     new_deck: A list containing a randomly shuffled deck of 52 cards.
     """
     new_deck = []
@@ -42,7 +42,7 @@ def deal_cards_into_3_columns(card_pile):
     card_pile: A list containing 21 cards.
 
     Returns
-    ----------
+    -------
     [column_1, column_2, column_3]: A 2d list containing the 3 columns of
                                     7 cards.
     """
@@ -87,7 +87,7 @@ def print_three_card_piles(card_piles):
 
     Parameters
     ----------
-    card_piles: A 2d list containing 3 piles to be printed.
+    card_piles: A 2 dimensional list containing 3 piles to be printed.
 
     """
     print_card_pile(1, card_piles[0])
@@ -100,7 +100,7 @@ def ask_player_for_chosen_card_pile():
     """Asks player for chosen card pile, validates it and returns it as an int.
 
     Returns
-    ----------
+    -------
     chosen_card_pile: The pile number of the users card as an integer.
     """
     while True:
@@ -130,7 +130,7 @@ def pick_up_card_piles(chosen_card_pile, card_piles):
     card_piles: The list of all 3 card piles.
 
     Returns
-    ----------
+    -------
     concentrated_card_pile: A list that joins the 3 card piles, with the pile
                             that contains the users card in the middle.
     """
@@ -192,6 +192,12 @@ deck_fragment = pick_up_card_piles(pile_of_chosen_card, deck_fragment)
 
 
 def print_card_pile_face_down(card_piles):
+    """Prints card piles face down with ? of ? notation
+
+    Parameters
+    ----------
+    card_piles: List containing all piles to format and print
+    """
     for index, pile in enumerate(card_piles):
         if pile == [""]:
             face_down_cards = ""
@@ -201,7 +207,16 @@ def print_card_pile_face_down(card_piles):
 
 
 def ask_player_for_2_piles(card_piles):
-    """Asks player for 2 card piles, validates the input and returns it """
+    """Asks player for 2 card piles, validates the input and returns it
+
+    Parameters
+    ----------
+    card_piles: All card piles as they exist to be used for error detection.
+
+    Returns
+    -------
+    [chosen_pile_1, chosen_pile_2]: list of the 2 indexes of piles to remove.
+    """
 
     while True:
         chosen_card_piles = input("Please select 2 piles at random. "
@@ -226,11 +241,12 @@ def ask_player_for_2_piles(card_piles):
 
                 # If pile not empty (already removed)
                 if ((card_piles[chosen_pile_1] != [""]) and
-                    (card_piles[chosen_pile_2] != [""])):
+                        (card_piles[chosen_pile_2] != [""])):
                     return [chosen_pile_1, chosen_pile_2]
 
                 else:
-                    print("The pile number you have entered has already been entered")
+                    print("The pile number you have entered has already been"
+                          "entered")
 
             # If numbers not valid
             else:
@@ -245,6 +261,22 @@ def ask_player_for_2_piles(card_piles):
 
 
 def remove_piles(piles_to_remove, all_card_piles):
+    """Removes chosen piles or all other piles depedning on user input
+
+    The piles chosen by the user are removed unless the user chooses a pile
+    with their own card where all other piles are removed.
+
+    Parameters
+    ----------
+    piles_to_remove: list or int containing indexes of piles to remove from
+                     all_card_piles.
+    all_card_piles: list of all card piles.
+
+    Returns
+    -------
+    all_card_piles: Contains same list as the parameter but with the given
+                    piles removed.
+    """
 
     # If more than 1 pile to remove
     if isinstance(piles_to_remove, list):
@@ -264,7 +296,7 @@ def remove_piles(piles_to_remove, all_card_piles):
                     all_card_piles[i] = [""]
 
     else:
-        if 4 == piles_to_remove:
+        if piles_to_remove == 4:
             print("The other pile will be removed. ")
 
             for i in range(len(all_card_piles) - 1):
@@ -281,7 +313,16 @@ def remove_piles(piles_to_remove, all_card_piles):
 
 
 def number_of_piles_remaining(all_card_piles):
+    """Finds the number of piles that contain cards
 
+    Parameters
+    ----------
+    all_card_piles: List of all card piles to find how many remain.
+
+    Returns
+    -------
+    count: The number of piles that remain.
+    """
     count = 0
 
     for pile in all_card_piles:
@@ -292,7 +333,16 @@ def number_of_piles_remaining(all_card_piles):
 
 
 def ask_player_for_1_pile(card_piles):
-    """Asks player for 1 card pile, validates the input and returns it """
+    """Asks player for 1 card pile, validates the input and returns it
+
+    Parameters
+    ----------
+    card_piles: List of all card piles.
+
+    Returns
+    -------
+    chosen_card_pile: 
+    """
 
     while True:
         chosen_card_pile = input("Please select a pile at random. ")
@@ -311,7 +361,8 @@ def ask_player_for_1_pile(card_piles):
                     return chosen_card_pile
 
                 else:
-                    print("The pile number you have entered has already been entered")
+                    print("The pile number you have entered has already been"
+                          "entered")
 
             # If number's not valid
             else:
@@ -324,13 +375,13 @@ def ask_player_for_1_pile(card_piles):
         print()
 
 
-def print_2_cards(card_pile):
+def print_2_cards():
     print("Card 1: ? of ?")
     print("Card 2: ? of ?")
     print()
 
 
-def ask_player_for_1_card(all_cards):
+def ask_player_for_1_card():
 
     while True:
         chosen_card = input("Please select a card number. ")
@@ -362,20 +413,17 @@ def print_last_card_removal(card_to_remove):
     else:
         print("The other card will be removed. ")
 
-
     print()
     print("Card 1: ")
     print("Card 2: ? of ?")
     print()
-
-    return
 
 print()
 print(deck_fragment[10])
 print()
 
 card_piles = [deck_fragment[0:3], deck_fragment[3:5], deck_fragment[5:7],
-                 deck_fragment[7:9], deck_fragment[9:11]]
+              deck_fragment[7:9], deck_fragment[9:11]]
 
 print_card_pile_face_down(card_piles)
 chosen_piles = ask_player_for_2_piles(card_piles)
@@ -400,8 +448,8 @@ print_card_pile_face_down(card_piles)
 print("Only one pile remaining. Now I will find your card. ")
 print()
 
-print_2_cards(the_card_pile)
-chosen_card = ask_player_for_1_card(the_card_pile)
+print_2_cards()
+chosen_card = ask_player_for_1_card()
 print_last_card_removal(chosen_card)
 
 print("There is only one card left...")
