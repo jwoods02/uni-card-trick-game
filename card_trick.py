@@ -341,7 +341,7 @@ def ask_player_for_1_pile(card_piles):
 
     Returns
     -------
-    chosen_card_pile: 
+    chosen_card_pile:
     """
 
     while True:
